@@ -6,8 +6,8 @@ let punteggio = 0;
 let winningScore = 0;
 const start = document.querySelector('.button');
 start.addEventListener('click', startGame);
-
-
+let arrayCelle = [];
+let numeroCelle = 0;
 
 function startGame(){
     let difficulty = document.querySelector('#difficulty').value;
@@ -35,9 +35,9 @@ function startGame(){
 
 function gridGenerator(dimGriglia){
     
-    let numeroCelle = dimGriglia ** 2; 
+    numeroCelle = dimGriglia ** 2; 
 
-    winningScore = numeroCelle - 48;
+    winningScore = numeroCelle - 16;
 
     bombsLocation = bombsGenerator(numeroCelle);
     console.log(bombsLocation);
@@ -50,7 +50,6 @@ function gridGenerator(dimGriglia){
         gridEl.style.gridTemplateColumns = `repeat(${dimGriglia}, 1fr)`;
         gridEl.append(cella);        
     }
-
 } 
 
 
@@ -69,6 +68,14 @@ function bombsGenerator(max){
     }
     return bombe
 }
+
+// Genero numeri casuali
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 
 function reset(){
     gridEl.innerHTML = (''); 
@@ -104,37 +111,28 @@ function clickHandler(){
     } else{
         // incremento il punteggio
         punteggio++;
+        if (punteggio == winningScore){
+            youWin()
+        }
     }
     this.classList.add(className);
 
 }
 
 function youWin(){
-    let win;
-    console.log(punteggio)
-    if( punteggio == winningScore){
-        win = true;
-    }
+    document.getElementById('result').innerHTML = 'YOU WIN!'
+    gridEl.classList.add("stop");
 
-    return win;
+    //aggiungo classe che mostra titolo del game over
+    const gameOverElement = document.querySelector(".game-over");
+    gameOverElement.classList.remove("hidden");
+
+    // Stampo il punteggio a fine partita
+    document.getElementById('game-points').innerHTML = 'Hai realizzato ' + punteggio + ' punti.'
 }
-
-
-// Genero numeri casuali
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-
 
 function gameOver(){
-    if(youWin() == true){
-        document.getElementById('result').innerHTML = 'YOU WIN!'        
-    } else{
-        document.getElementById('result').innerHTML = 'YOU LOSE'
-    }
+    document.getElementById('result').innerHTML = 'YOU LOSE!'
     // Aggiungo la classe che ferma gli eventi del mouse quando clicco su una bomba, alla griglia
     gridEl.classList.add("stop");
 
@@ -145,11 +143,18 @@ function gameOver(){
     // Stampo il punteggio a fine partita
     document.getElementById('game-points').innerHTML = 'Hai realizzato ' + punteggio + ' punti.'
 
-
    
 }
 
+// function bombShow(){
+//     for(let i = 0; i < numeroCelle; i++){
+//         arrayCelle[i]
+    
+//     }
+//     if(bombsLocation.includes([i])){
 
+//     }
+// }
 
 
 
