@@ -1,10 +1,9 @@
 console.log('Campo Minato')
 
 let gridEl = document.querySelector('.grid');
-let bombsLocation = []
-let punteggio = 0
-
-
+let bombsLocation = [];
+let punteggio = 0;
+let winningScore = 0;
 const start = document.querySelector('.button');
 start.addEventListener('click', startGame);
 
@@ -12,9 +11,12 @@ start.addEventListener('click', startGame);
 
 function startGame(){
     let difficulty = document.querySelector('#difficulty').value;
+    // eseguo la funzione di reset del gioco
     reset();
-    start.value = "Restart";  
+    start.value = "Restart"; 
    
+    let dimensione;
+    
     switch(difficulty){
         case 'medium':
             dimensione = 9
@@ -25,15 +27,20 @@ function startGame(){
         default:
             dimensione = 10
     }
+    
     gridGenerator(dimensione)
 }
 
+
+
 function gridGenerator(dimGriglia){
     
-    let numeroCelle = dimGriglia ** 2;
-    
+    let numeroCelle = dimGriglia ** 2; 
+
+    winningScore = numeroCelle - 48;
+
     bombsLocation = bombsGenerator(numeroCelle);
-    console.log(bombsLocation)
+    console.log(bombsLocation);
     
     for(let i = 0; i < numeroCelle; i++){
 
@@ -43,7 +50,9 @@ function gridGenerator(dimGriglia){
         gridEl.style.gridTemplateColumns = `repeat(${dimGriglia}, 1fr)`;
         gridEl.append(cella);        
     }
+
 } 
+
 
 function bombsGenerator(max){
     // creo 16 numeri da 1 a numeroCelle
@@ -55,6 +64,7 @@ function bombsGenerator(max){
         // se il numero non è presente nell'array bombe
         if(!bombe.includes(n)){
             bombe.push(n)
+
         }
     }
     return bombe
@@ -62,7 +72,13 @@ function bombsGenerator(max){
 
 function reset(){
     gridEl.innerHTML = (''); 
+    punteggio = 0;
+    // rimuovo la classe che ferma il gioco una volta premuto restart
+    gridEl.classList.remove("stop");
+    const gameOverElement = document.querySelector(".game-over");
+    gameOverElement.classList.add("hidden");
 }
+
 
 function getSquareElement(){
     const square = document.createElement('div');
@@ -75,31 +91,68 @@ function getSquareElement(){
 function clickHandler(){
     const square = this;
     // square.classList.toggle('clicked');  
-    const selectedCell = parseInt(this.dataset.numero);
+    const selectedSquare = parseInt(this.dataset.numero);
     square.removeEventListener('click', clickHandler);
     
     // se il numero non è presente nell'array di bombe applico la classe safe e aumento il punteggio
     let className = 'safe';
 
-    if (bombsLocation.includes(selectedCell)){
+    if (bombsLocation.includes(selectedSquare)){
         className = 'danger';
+        gameOver();
 
     } else{
-        punteggio++
+        // incremento il punteggio
+        punteggio++;
     }
-    this.classList.add(className)
+    this.classList.add(className);
+
+}
+
+function youWin(){
+    let win;
+    console.log(punteggio)
+    if( punteggio == winningScore){
+        win = true;
+    }
+
+    return win;
 }
 
 
-
+// Genero numeri casuali
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// in seguito al click
-// se il numero è presente nella lista dei numeri generati
+
+
+function gameOver(){
+    if(youWin() == true){
+        document.getElementById('result').innerHTML = 'YOU WIN!'        
+    } else{
+        document.getElementById('result').innerHTML = 'YOU LOSE'
+    }
+    // Aggiungo la classe che ferma gli eventi del mouse quando clicco su una bomba, alla griglia
+    gridEl.classList.add("stop");
+
+    //aggiungo classe che mostra titolo del game over
+    const gameOverElement = document.querySelector(".game-over");
+    gameOverElement.classList.remove("hidden");
+
+    // Stampo il punteggio a fine partita
+    document.getElementById('game-points').innerHTML = 'Hai realizzato ' + punteggio + ' punti.'
+
+
+   
+}
+
+
+
+
+
 // ho calpestato una bomba e coloro di rosso la casella e termina la partita
 // altrimenti sono salvo e continuo a cliccare
 // se ho cliccato su una bomba o quando ho rivelato tutte le celle che non sono bombe.

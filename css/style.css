@@ -71,6 +71,7 @@ header{
 main{
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -80,6 +81,7 @@ main{
 .grid {
     flex-basis: 100%;
     max-width: 800px;
+    max-height: 800px;
     margin: 0 auto;
     display: grid;
     aspect-ratio: 1;
@@ -87,6 +89,10 @@ main{
     border: 1px solid white;
 }
 
+.grid.stop{
+    pointer-events: none;
+    cursor: default;
+}
 
 .square{
     aspect-ratio: 1;
@@ -110,6 +116,11 @@ main{
     background-color: rgb(0, 114, 120);
     color: transparent;
 }
+
+.hidden{
+    display: none;
+}
+
 
 
 footer{
