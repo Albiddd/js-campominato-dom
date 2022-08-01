@@ -45,6 +45,7 @@ header{
     font-weight: 600;
     font-size: 1.2rem;
     vertical-align: middle;
+    cursor: pointer;
 }
 .button{
     background-color: transparent;
@@ -76,7 +77,7 @@ main{
     background-color: darkcyan;
 }
 
-.tabellone {
+.grid {
     flex-basis: 100%;
     max-width: 800px;
     margin: 0 auto;
@@ -98,8 +99,16 @@ main{
     cursor: pointer;
 }
 
-.square.clicked{
-    background-color: lightcoral;
+
+.square.danger{
+    background-image: url(../img/bomb.png);
+    background-size: contain;
+    background-color: rgb(150, 28, 28);
+    color: transparent;
+}
+.square.safe{
+    background-color: rgb(0, 114, 120);
+    color: transparent;
 }
 
 
